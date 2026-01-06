@@ -680,7 +680,8 @@
                 <!-- Data sources will be populated by JavaScript -->
             </div>
             <div class="form-actions">
-                <button type="button" class="btn btn-info" onclick="window.open('https://cors-anywhere.herokuapp.com', '_blank')">
+                <button type="button" class="btn btn-info"
+                    onclick="window.open('https://cors-anywhere.herokuapp.com', '_blank')">
                     啟用 Proxy
                 </button>
                 <button type="button" class="btn btn-primary" onclick="loadAllDataSources()">
@@ -1056,14 +1057,22 @@
                 showNotification(`${source.name} 載入完成 (${data.length} 筆資料)`, 'success');
             } catch (error) {
                 console.error(`載入 ${source.name} 失敗:`, error);
-                showNotification(`${source.name} 載入失敗`, 'error');
+                // showNotification(`${source.name} 載入失敗`, 'error');
+                // container.innerHTML = `
+                //     <div class="no-data">
+                //         <i class="fas fa-exclamation-circle"></i>
+                //         <p>${source.name} 載入失敗</p>
+                //         <p style="font-size: 0.9rem; margin-top: 10px;">${error.message}</p>
+                //     </div>
+                // `;
                 container.innerHTML = `
-                    <div class="no-data">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>${source.name} 載入失敗</p>
-                        <p style="font-size: 0.9rem; margin-top: 10px;">${error.message}</p>
-                    </div>
-                `;
+                        <div class="no-data">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>請先訪問 <a href="${PROXY_URL}" target="_blank">${PROXY_URL}</a></p>
+                            <p style="font-size: 0.9rem; margin-top: 10px;">點擊「Request temporary access to the demo server」按鈕啟用代理伺服器</p>
+                        </div>
+                    `;
+                showNotification('請啟用 CORS Anywhere 代理伺服器', 'error');
             }
         }
         // 刷新數據源（強制從 API 重新載入）
@@ -1111,14 +1120,14 @@
             try {
                 const response = await fetch(url);
                 if (!response.ok) {
-                    container.innerHTML = `
-                        <div class="no-data">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <p>請先訪問 <a href="${PROXY_URL}" target="_blank">${PROXY_URL}</a></p>
-                            <p style="font-size: 0.9rem; margin-top: 10px;">點擊「Request temporary access to the demo server」按鈕啟用代理伺服器</p>
-                        </div>
-                    `;
-                    showNotification('請啟用 CORS Anywhere 代理伺服器', 'error');
+                    // container.innerHTML = `
+                    //     <div class="no-data">
+                    //         <i class="fas fa-exclamation-triangle"></i>
+                    //         <p>請先訪問 <a href="${PROXY_URL}" target="_blank">${PROXY_URL}</a></p>
+                    //         <p style="font-size: 0.9rem; margin-top: 10px;">點擊「Request temporary access to the demo server」按鈕啟用代理伺服器</p>
+                    //     </div>
+                    // `;
+                    // showNotification('請啟用 CORS Anywhere 代理伺服器', 'error');
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 const text = await response.text();
