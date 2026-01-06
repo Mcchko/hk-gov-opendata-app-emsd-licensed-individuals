@@ -1104,9 +1104,18 @@
         // 從 API 載入資料（不檢查緩存）
         async function loadDataSourceFromAPI(source) {
             const url = `${PROXY_URL}/${source.url}`;
+            const container = document.getElementById('accordion-container');
             try {
                 const response = await fetch(url);
                 if (!response.ok) {
+                    container.innerHTML = `
+                        <div class="no-data">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>請先訪問 <a href="${PROXY_URL}" target="_blank">${PROXY_URL}</a></p>
+                            <p style="font-size: 0.9rem; margin-top: 10px;">點擊「Request temporary access to the demo server」按鈕啟用代理伺服器</p>
+                        </div>
+                    `;
+                    showNotification('請啟用 CORS Anywhere 代理伺服器', 'error');
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 const text = await response.text();
@@ -1215,7 +1224,6 @@
             result.push(current);
             return result.map(cell => cell.replace(/^"|"$/g, '').trim());
         }
-
         // 解析 JSON 數據 - 確保所有必要字段都被正確解析
         function parseJSON(jsonText, sourceId) {
             try {
@@ -1325,7 +1333,6 @@
                 return [];
             }
         }
-
         // 更新統計數據
         function updateStatistics(totalPersons) {
             const totalDatasets = Object.keys(allData).length;
